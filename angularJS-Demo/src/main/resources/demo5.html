@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angularJS demo 控制器</title>
+    <script src="angular.min.js"></script>
+    <script>
+        var app = angular.module("myApp",[])
+        
+        // 定义控制器 c
+        app.controller("myController",function ($scope) {
+            $scope.list = [100,200,300,400];
+        })
+    </script>
+</head>
+<body ng-app="myApp" ng-controller="myController">
+<table>
+    <tr ng-repeat="x in list">
+        <td>{{x}}</td>
+    </tr>
+</table>
+</body>
+</html>

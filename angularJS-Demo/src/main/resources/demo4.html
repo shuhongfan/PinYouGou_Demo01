@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angularJS demo 控制器</title>
+    <script src="angular.min.js"></script>
+    <script>
+        var app = angular.module("myApp",[])
+        
+        // 定义控制器
+        app.controller("myController",function ($scope) {
+            $scope.add = function(){
+                $scope.z = parseInt($scope.x)+parseInt($scope.y)
+            }
+        })
+    </script>
+</head>
+<body ng-app="myApp" ng-controller="myController">
+<div>
+    x：<input type="text" ng-model="x">
+    y：<input type="text" ng-model="y">
+
+    <button ng-click="add()">运算</button>
+    {{z}}
+</div>
+</body>
+</html>
