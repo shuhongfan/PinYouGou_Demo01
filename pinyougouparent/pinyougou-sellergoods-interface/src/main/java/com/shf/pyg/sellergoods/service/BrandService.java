@@ -4,6 +4,7 @@ import com.shf.pyg.entity.PageResult;
 import com.shf.pyg.pojo.TbBrand;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 品牌业务接口
@@ -55,4 +56,11 @@ public interface BrandService {
      * @return
      */
     public PageResult findPage(TbBrand brand,int PageNum,int PageSize);
+
+
+    /**
+     * 下拉列表数据
+     * @return
+     */
+    public List<Map> selectOptionList();
 }

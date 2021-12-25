@@ -1,2 +1,1 @@
-// 构建模块
-var app = angular.module("pinyougou")
+var app=angular.module("pinyougou",[]);//构建模块

@@ -93,6 +93,10 @@ public class ItemCatController {
 		try {
 			itemCatService.delete(ids);
 			return new Result(true, "删除成功"); 
+		}
+		catch (RuntimeException e){
+			e.printStackTrace();
+			return new Result(false, e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new Result(false, "删除失败");
@@ -110,5 +114,14 @@ public class ItemCatController {
 	public PageResult search(@RequestBody TbItemCat itemCat, int page, int rows  ){
 		return itemCatService.findPage(itemCat, page, rows);		
 	}
-	
+
+	/**
+	 * 根据上级ID查询商品分类
+	 * @param parentId
+	 * @return
+	 */
+	@RequestMapping("/findByParentId")
+	public List<TbItemCat> findByParentId(Long parentId){
+		return itemCatService.findByParentId(parentId);
+	}
 }
