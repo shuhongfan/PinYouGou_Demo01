@@ -2,6 +2,7 @@ package com.shf.pyg.sellergoods.service;
 
 import com.shf.pyg.entity.PageResult;
 import com.shf.pyg.pojo.TbGoods;
+import com.shf.pyg.pojogroup.Goods;
 
 import java.util.List;
 /**
@@ -28,7 +29,7 @@ public interface GoodsService {
 	/**
 	 * 增加
 	*/
-	public void add(TbGoods goods);
+	public void add(Goods goods);
 	
 	
 	/**

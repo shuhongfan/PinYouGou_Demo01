@@ -4,9 +4,11 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.shf.pyg.entity.PageResult;
+import com.shf.pyg.mapper.TbGoodsDescMapper;
 import com.shf.pyg.mapper.TbGoodsMapper;
 import com.shf.pyg.pojo.TbGoods;
 import com.shf.pyg.pojo.TbGoodsExample;
+import com.shf.pyg.pojogroup.Goods;
 import com.shf.pyg.sellergoods.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,6 +24,9 @@ public class GoodsServiceImpl implements GoodsService {
 
 	@Autowired
 	private TbGoodsMapper goodsMapper;
+
+	@Autowired
+	private TbGoodsDescMapper goodsDescMapper;
 	
 	/**
 	 * 查询全部
@@ -47,8 +52,12 @@ public class GoodsServiceImpl implements GoodsService {
 	 * 增加
 	 */
 	@Override
-	public void add(TbGoods goods) {
-		goodsMapper.insert(goods);		
+	public void add(Goods goods) {
+//		设置默认未审核状态
+		goods.getGoods().setAuditStatus("0");
+		goodsMapper.insert(goods.getGoods());
+		goods.getGoodsDesc().setGoodsId(goods.getGoods().getId());
+		goodsDescMapper.insert(goods.getGoodsDesc());
 	}
 
 	

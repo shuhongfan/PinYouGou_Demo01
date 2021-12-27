@@ -4,7 +4,9 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.shf.pyg.entity.PageResult;
 import com.shf.pyg.entity.Result;
 import com.shf.pyg.pojo.TbGoods;
+import com.shf.pyg.pojogroup.Goods;
 import com.shf.pyg.sellergoods.service.GoodsService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,7 +49,10 @@ public class GoodsController {
 	 * @return
 	 */
 	@RequestMapping("/add")
-	public Result add(@RequestBody TbGoods goods){
+	public Result add(@RequestBody Goods goods){
+//		获取商家ID
+		String sellerID = SecurityContextHolder.getContext().getAuthentication().getName();
+		goods.getGoods().setSellerId(sellerID);
 		try {
 			goodsService.add(goods);
 			return new Result(true, "增加成功");
@@ -101,7 +106,7 @@ public class GoodsController {
 	
 		/**
 	 * 查询+分页
-	 * @param brand
+	 * @param
 	 * @param page
 	 * @param rows
 	 * @return

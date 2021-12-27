@@ -1,6 +1,6 @@
  //控制层 
-app.controller('goodsController' ,function($scope,$controller   ,goodsService){	
-	
+app.controller('goodsController' ,function($scope,$controller   ,goodsService,uploadService){
+
 	$controller('baseController',{$scope:$scope});//继承
 	
     //读取列表数据绑定到表单中  
@@ -32,20 +32,17 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService){
 	}
 	
 	//保存 
-	$scope.save=function(){				
-		var serviceObject;//服务层对象  				
-		if($scope.entity.id!=null){//如果有ID
-			serviceObject=goodsService.update( $scope.entity ); //修改  
-		}else{
-			serviceObject=goodsService.add( $scope.entity  );//增加 
-		}				
-		serviceObject.success(
+	$scope.save=function(){
+		// 商品介绍
+		$scope.entity.goodsDesc.introduction=editor.html()
+		serviceObject=goodsService.add( $scope.entity  ).success(
 			function(response){
+				alert(response.messgae);
 				if(response.success){
-					//重新查询 
-		        	$scope.reloadList();//重新加载
-				}else{
-					alert(response.message);
+					//重新查询
+		        	$scope.entity={}
+					// 清空富文本编辑器
+					editor.html("")
 				}
 			}		
 		);				
@@ -76,5 +73,30 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService){
 			}			
 		);
 	}
-    
+
+	// 图片实体
+	$scope.image_entity = {};
+	$scope.uploadImage=function() {
+	    uploadService.upload().success(function(response) {
+	        if (response.error==0){
+				// 成功
+				$scope.image_entity.url=response.url;
+			}
+	    })
+	}
+
+	// 商品实体
+	$scope.entity={
+		goodsDesc: {
+			itemImages:[]
+		}
+	}
+	// 添加到图片列表
+	$scope.add_image_entity = function() {
+		$scope.entity.goodsDesc.itemImages.push($scope.image_entity);
+	}
+
+	$scope.remove_image_entity = function(index) {
+	    $scope.entity.goodsDesc.itemImages.splice(index,1)
+	}
 });	
