@@ -1,16 +1,21 @@
 package com.shf.pyg.sellergoods.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.shf.pyg.entity.PageResult;
+import com.shf.pyg.mapper.TbSpecificationOptionMapper;
 import com.shf.pyg.mapper.TbTypeTemplateMapper;
+import com.shf.pyg.pojo.TbSpecificationOption;
+import com.shf.pyg.pojo.TbSpecificationOptionExample;
 import com.shf.pyg.pojo.TbTypeTemplate;
 import com.shf.pyg.pojo.TbTypeTemplateExample;
 import com.shf.pyg.sellergoods.service.TypeTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 服务实现层
@@ -22,6 +27,9 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 
 	@Autowired
 	private TbTypeTemplateMapper typeTemplateMapper;
+
+	@Autowired
+	private TbSpecificationOptionMapper specificationOptionMapper;
 	
 	/**
 	 * 查询全部
@@ -107,5 +115,29 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 		Page<TbTypeTemplate> page= (Page<TbTypeTemplate>)typeTemplateMapper.selectByExample(example);		
 		return new PageResult(page.getTotal(), page.getResult());
 	}
-	
+
+	/**
+	 * 根据模板ID查询规格列表
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public List<Map> findSpecList(Long id) {
+//		根据ID查询模板
+		TbTypeTemplate tbTypeTemplate = typeTemplateMapper.selectByPrimaryKey(id);
+//		得到规格列表  字符串转JSON数组
+		List<Map> specList = JSON.parseArray(tbTypeTemplate.getSpecIds(), Map.class);
+
+//		查询规格选项列表
+		for (Map spec : specList) {
+			TbSpecificationOptionExample example = new TbSpecificationOptionExample();
+			TbSpecificationOptionExample.Criteria criteria = example.createCriteria();
+//			添加查询条件,根据规格ID查询
+			criteria.andSpecIdEqualTo(new Long((Integer) spec.get("id")));
+			List<TbSpecificationOption> options = specificationOptionMapper.selectByExample(example);
+			spec.put("options",options);
+		}
+		return specList;
+	}
+
 }
