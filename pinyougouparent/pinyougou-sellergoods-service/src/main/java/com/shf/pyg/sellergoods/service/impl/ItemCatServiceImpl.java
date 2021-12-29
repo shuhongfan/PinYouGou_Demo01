@@ -9,6 +9,7 @@ import com.shf.pyg.pojo.TbItemCat;
 import com.shf.pyg.pojo.TbItemCatExample;
 import com.shf.pyg.sellergoods.service.ItemCatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
  *
  */
 @Service
+@Transactional
 public class ItemCatServiceImpl implements ItemCatService {
 
 	@Autowired

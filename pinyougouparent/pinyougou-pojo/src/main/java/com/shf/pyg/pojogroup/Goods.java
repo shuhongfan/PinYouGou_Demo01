@@ -2,22 +2,26 @@ package com.shf.pyg.pojogroup;
 
 import com.shf.pyg.pojo.TbGoods;
 import com.shf.pyg.pojo.TbGoodsDesc;
+import com.shf.pyg.pojo.TbItem;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 商品组合实体类
  */
 public class Goods implements Serializable {
-    private TbGoods goods;
-    private TbGoodsDesc goodsDesc;
+    private TbGoods goods;//商品主表
+    private TbGoodsDesc goodsDesc;//商品扩展表
 
-    public Goods() {
+    private List<TbItem> itemList;//SKU列表
+
+    public List<TbItem> getItemList() {
+        return itemList;
     }
 
-    public Goods(TbGoods goods, TbGoodsDesc goodsDesc) {
-        this.goods = goods;
-        this.goodsDesc = goodsDesc;
+    public void setItemList(List<TbItem> itemList) {
+        this.itemList = itemList;
     }
 
     public TbGoods getGoods() {
@@ -34,13 +38,5 @@ public class Goods implements Serializable {
 
     public void setGoodsDesc(TbGoodsDesc goodsDesc) {
         this.goodsDesc = goodsDesc;
-    }
-
-    @Override
-    public String toString() {
-        return "Goods{" +
-                "goods=" + goods +
-                ", goodsDesc=" + goodsDesc +
-                '}';
     }
 }

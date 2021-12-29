@@ -13,6 +13,7 @@ import com.shf.pyg.pojo.TbTypeTemplate;
 import com.shf.pyg.pojo.TbTypeTemplateExample;
 import com.shf.pyg.sellergoods.service.TypeTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import java.util.Map;
  *
  */
 @Service
+@Transactional
 public class TypeTemplateServiceImpl implements TypeTemplateService {
 
 	@Autowired

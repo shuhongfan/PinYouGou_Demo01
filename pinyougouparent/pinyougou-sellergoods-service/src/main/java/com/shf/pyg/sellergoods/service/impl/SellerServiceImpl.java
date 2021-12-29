@@ -9,6 +9,7 @@ import com.shf.pyg.pojo.TbSeller;
 import com.shf.pyg.pojo.TbSellerExample;
 import com.shf.pyg.sellergoods.service.SellerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
  *
  */
 @Service
+@Transactional
 public class SellerServiceImpl implements SellerService {
 
 	@Autowired

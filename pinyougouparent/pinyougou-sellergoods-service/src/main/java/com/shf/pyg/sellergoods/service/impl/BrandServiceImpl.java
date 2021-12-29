@@ -9,6 +9,7 @@ import com.shf.pyg.pojo.TbBrand;
 import com.shf.pyg.pojo.TbBrandExample;
 import com.shf.pyg.sellergoods.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.Map;
  * 品牌服务层实现
  */
 @Service(interfaceClass = BrandService.class)
+@Transactional
 public class BrandServiceImpl implements BrandService {
     @Autowired
     private TbBrandMapper brandMapper;

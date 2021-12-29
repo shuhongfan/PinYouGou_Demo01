@@ -9,6 +9,7 @@ import com.shf.pyg.pojo.TbGoodsDesc;
 import com.shf.pyg.pojo.TbGoodsDescExample;
 import com.shf.pyg.sellergoods.service.GoodsDescService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
  *
  */
 @Service
+@Transactional
 public class GoodsDescServiceImpl implements GoodsDescService {
 
 	@Autowired
