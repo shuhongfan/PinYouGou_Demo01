@@ -9,6 +9,7 @@ import com.shf.pyg.pojo.TbItemCat;
 import com.shf.pyg.pojo.TbItemCatExample;
 import com.shf.pyg.sellergoods.service.ItemCatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -107,6 +108,8 @@ public class ItemCatServiceImpl implements ItemCatService {
 		return new PageResult(page.getTotal(), page.getResult());
 	}
 
+	@Autowired
+	private RedisTemplate redisTemplate;
 	/**
 	 * 根据上级ID查询商品分类
 	 * @param parentId
@@ -117,6 +120,14 @@ public class ItemCatServiceImpl implements ItemCatService {
 		TbItemCatExample example = new TbItemCatExample();
 		TbItemCatExample.Criteria criteria = example.createCriteria();
 		criteria.andParentIdEqualTo(parentId);
+
+//		将商品分类数据放入缓存
+		List<TbItemCat> list = itemCatMapper.selectByExample(null);
+		for (TbItemCat itemCat : list) {
+//			以商品名称作为KEY,以模板名称作为值
+			redisTemplate.boundHashOps("itemCat").put(itemCat.getName(),itemCat.getTypeId());
+		}
+
 		return itemCatMapper.selectByExample(example);
 	}
 
