@@ -127,7 +127,7 @@ public class ItemCatServiceImpl implements ItemCatService {
 //			以商品名称作为KEY,以模板名称作为值
 			redisTemplate.boundHashOps("itemCat").put(itemCat.getName(),itemCat.getTypeId());
 		}
-
+		System.out.println("将品牌列表与规格列表放入缓存");
 		return itemCatMapper.selectByExample(example);
 	}
 
