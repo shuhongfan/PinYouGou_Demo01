@@ -8,4 +8,9 @@ app.controller("contentController",function($scope,contentService){
             $scope.contentList[categoryId] = response
         });
     }
+
+    $scope.search=function(){
+        let keywords = $scope.keywords;
+        location.href="http://localhost:9104/search.html#?keywords=" + keywords
+    }
 })

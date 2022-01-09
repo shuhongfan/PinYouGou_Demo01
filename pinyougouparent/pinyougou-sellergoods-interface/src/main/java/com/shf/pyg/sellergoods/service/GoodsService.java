@@ -2,6 +2,7 @@ package com.shf.pyg.sellergoods.service;
 
 import com.shf.pyg.entity.PageResult;
 import com.shf.pyg.pojo.TbGoods;
+import com.shf.pyg.pojo.TbItem;
 import com.shf.pyg.pojogroup.Goods;
 
 import java.util.List;
@@ -67,4 +68,11 @@ public interface GoodsService {
 	 * @param status
 	 */
 	public void updateStatus(Long[] ids,String status);
+
+	/**
+	 * 根据spu id数组  sku列表
+	 * @param goodsIds
+	 * @return
+	 */
+	public List<TbItem> findItemListByGoodsIds(Long[] goodsIds);
 }

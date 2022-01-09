@@ -4,7 +4,9 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.shf.pyg.entity.PageResult;
 import com.shf.pyg.entity.Result;
 import com.shf.pyg.pojo.TbGoods;
+import com.shf.pyg.pojo.TbItem;
 import com.shf.pyg.pojogroup.Goods;
+import com.shf.pyg.search.service.ItemSearchService;
 import com.shf.pyg.sellergoods.service.GoodsService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +25,9 @@ public class GoodsController {
 
 	@Reference
 	private GoodsService goodsService;
+
+	@Reference
+	private ItemSearchService itemSearchService;
 	
 	/**
 	 * 返回全部列表
@@ -126,5 +131,21 @@ public class GoodsController {
 
 		return goodsService.findPage(goods, page, rows);		
 	}
-	
+
+//	上下架
+	@RequestMapping("/updateMarketabel")
+	public Result updateMarketable(Long[] ids,String markettable){
+		try {
+			String sellerId = SecurityContextHolder.getContext().getAuthentication().getName();
+//			goodsService.updateMarketable(ids,markettable,sellerId);
+			if (markettable.equals("1")){
+				List<TbItem> itemList = goodsService.findItemListByGoodsIds(ids);
+				itemSearchService.importList(itemList);
+			}
+			return new Result(true,"操作成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Result(false,"操作失败");
+		}
+	}
 }

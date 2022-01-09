@@ -12,6 +12,7 @@ import com.shf.pyg.sellergoods.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -268,6 +269,21 @@ public class GoodsServiceImpl implements GoodsService {
 			goods.setAuditStatus(status);
 			goodsMapper.updateByPrimaryKey(goods);
 		}
+	}
+
+	/**
+	 * 根据spu id数组拆线呢sku列表
+	 * @param goodsIds
+	 * @return
+	 */
+	@Override
+	public List<TbItem> findItemListByGoodsIds(Long[] goodsIds) {
+		TbItemExample example = new TbItemExample();
+		TbItemExample.Criteria criteria = example.createCriteria();
+		criteria.andGoodsIdIn(Arrays.asList(goodsIds));
+//		状态为1
+		criteria.andStatusEqualTo("1");
+		return itemMapper.selectByExample(example);
 	}
 
 }

@@ -5,13 +5,11 @@ import com.shf.pyg.pojo.TbItem;
 import com.shf.pyg.search.service.ItemSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.*;
-import org.springframework.data.solr.core.query.result.GroupEntry;
-import org.springframework.data.solr.core.query.result.GroupPage;
-import org.springframework.data.solr.core.query.result.GroupResult;
-import org.springframework.data.solr.core.query.result.ScoredPage;
+import org.springframework.data.solr.core.query.result.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,8 +55,16 @@ public class ItemSearchServiceImpl implements ItemSearchService {
     private Map searchList(Map searchMap){
         HashMap resultMap = new HashMap();
 
+//        0.去掉空格
+        String keyword = (String) searchMap.get("keywords");
+        keyword=keyword.replace(" ","");
+        searchMap.put("keywords",keyword);
+
 //        1.关键字搜索
-        SimpleQuery query = new SimpleQuery("*:*");
+//        SimpleQuery query = new SimpleQuery("*:*");
+//        高亮查询对象
+        SimpleHighlightQuery query = new SimpleHighlightQuery();
+
         String keywords = (String) searchMap.get("keywords");
         Criteria criteria = new Criteria("item_keywords").is(keywords);
         query.addCriteria(criteria);
@@ -105,9 +111,69 @@ public class ItemSearchServiceImpl implements ItemSearchService {
             }
         }
 
+//        6.分页查询
+//        页码
+        Integer pageNo = (Integer) searchMap.get("pageNo");
+        if (pageNo==null){
+            pageNo=1;
+        }
+//        页大小
+        Integer pageSize = (Integer) searchMap.get("pageSize");
+        if(pageSize==null){
+            pageSize=20;
+        }
+
+        query.setOffset((pageNo-1)*pageSize);
+        query.setRows(pageSize);
+
+//        7. 排序规则
+        String sortType = (String) searchMap.get("sort");
+        String sortField = (String) searchMap.get("sortField");
+        if (sortType!=null && !"".equals(sortType)){
+            if (sortType.equals("ASC")){
+                Sort sort = new Sort(Sort.Direction.ASC, "item_" + sortField);
+                query.addSort(sort);
+            }
+
+            if (sortType.equals("DESC")){
+                Sort sort = new Sort(Sort.Direction.DESC, "item_" + sortField);
+                query.addSort(sort);
+            }
+        }
+
+//        8. 高亮
+//        设置高亮列
+        HighlightOptions highlightOptions = new HighlightOptions().addField("item_title");
+        highlightOptions.setSimplePrefix("<em style='color:red'>");
+        highlightOptions.setSimplePostfix("</em>");
+//        设置高亮选项
+        query.setHighlightOptions(highlightOptions);
+
 //        根据条件进行查询
-        ScoredPage<TbItem> itemPage = solrTemplate.queryForPage(query, TbItem.class);
+//        ScoredPage<TbItem> itemPage = solrTemplate.queryForPage(query, TbItem.class);
+//        得到高亮页对象
+        HighlightPage<TbItem> itemPage = solrTemplate.queryForHighlightPage(query, TbItem.class);
+
+//        得到高亮入口集合
+        List<HighlightEntry<TbItem>> highlighted = itemPage.getHighlighted();
+//        遍历高亮入口对象
+        for (HighlightEntry<TbItem> highlightEntry : highlighted) {
+//            得到实体类 注意:title字段没有高亮效果
+            TbItem item = highlightEntry.getEntity();
+
+            List<HighlightEntry.Highlight> highlights = highlightEntry.getHighlights();
+            if (highlights.size() >0 && highlights.get(0).getSnipplets().size()>0){
+//                设置高亮片段
+                List<String> snipplets = highlights.get(0).getSnipplets();
+                item.setTitle(snipplets.get(0));
+            }
+        }
+
         resultMap.put("rows", itemPage.getContent());
+//        总条数
+        resultMap.put("total",itemPage.getTotalElements());
+//        总页数
+        resultMap.put("totalPages",itemPage.getTotalPages());
 
         return resultMap;
     }
@@ -169,5 +235,11 @@ public class ItemSearchServiceImpl implements ItemSearchService {
             map.put("specList",specList);
         }
         return map;
+    }
+
+    @Override
+    public void importList(List list) {
+        solrTemplate.saveBeans(list);
+        solrTemplate.commit();
     }
 }
