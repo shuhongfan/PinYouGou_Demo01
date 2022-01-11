@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 服务实现层
+ * 服务实现层  注解式事务配置
  * @author Administrator
  *
  */
@@ -255,7 +255,6 @@ public class GoodsServiceImpl implements GoodsService {
 			if(goods.getIsDelete()!=null && goods.getIsDelete().length()>0){
 				criteria.andIsDeleteLike("%"+goods.getIsDelete()+"%");
 			}
-	
 		}
 		
 		Page<TbGoods> page= (Page<TbGoods>)goodsMapper.selectByExample(example);		
@@ -272,7 +271,7 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	/**
-	 * 根据spu id数组拆线呢sku列表
+	 * 根据spu_id数组查询sku列表
 	 * @param goodsIds
 	 * @return
 	 */
@@ -286,4 +285,45 @@ public class GoodsServiceImpl implements GoodsService {
 		return itemMapper.selectByExample(example);
 	}
 
+	/**
+	 *  更改上架状态
+	 * @param ids 主键数组
+	 * @param marketable 上架状态
+	 * @param sellerId 商家ID
+	 */
+	@Override
+	public void updateMarketable(Long[] ids, String marketable,String sellerId) {
+		for(Long id:ids){
+			TbGoods tbGoods = goodsMapper.selectByPrimaryKey(id);
+			//判断是否为该商家的商品
+			if(!tbGoods.getSellerId().equals(sellerId) && sellerId!=null){
+				continue;
+			}
+			//未审核的商品不能做上架操作，跳过记录
+			if(!tbGoods.getAuditStatus().equals("1") &&  marketable.equals("1")){
+				continue;
+			}
+			tbGoods.setIsMarketable(marketable);
+			goodsMapper.updateByPrimaryKey(tbGoods);
+		}
+	}
+
+
+	/**
+	 * 批量删除
+	 */
+	@Override
+	public void delete(Long[] ids,String sellerId) {
+		for(Long id:ids){
+			TbGoods goods = goodsMapper.selectByPrimaryKey(id);
+			if(sellerId!=null && !goods.getSellerId().equals(sellerId)){ //如果不是当前的商家则不删除
+				continue;
+			}
+			if( "1".equals(goods.getIsMarketable())){//如果是上架的商品则不删除
+				continue;
+			}
+			goods.setIsDelete("1");
+			goodsMapper.updateByPrimaryKey(goods);
+		}
+	}
 }

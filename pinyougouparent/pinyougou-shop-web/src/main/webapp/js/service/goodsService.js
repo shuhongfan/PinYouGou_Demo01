@@ -28,5 +28,10 @@ app.service('goodsService',function($http){
 	//搜索
 	this.search=function(page,rows,searchEntity){
 		return $http.post('../goods/search.do?page='+page+"&rows="+rows, searchEntity);
-	}    	
+	}
+
+	//上下架
+	this.updateMarketabel=function (ids,marketabel) {
+		return $http.get('../goods/updateMarketabel.do?ids='+ids+'&marketabel='+marketabel);
+	}
 });

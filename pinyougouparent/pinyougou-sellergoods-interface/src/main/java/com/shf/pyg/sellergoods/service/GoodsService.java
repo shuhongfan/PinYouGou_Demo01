@@ -70,9 +70,24 @@ public interface GoodsService {
 	public void updateStatus(Long[] ids,String status);
 
 	/**
-	 * 根据spu id数组  sku列表
+	 * 根据spu_id数组查询sku列表
 	 * @param goodsIds
 	 * @return
 	 */
 	public List<TbItem> findItemListByGoodsIds(Long[] goodsIds);
+
+	/**
+	 *  更改上架状态
+	 * @param ids 主键数组
+	 * @param marketable 上架状态
+	 * @param sellerId 商家ID
+	 */
+	public void updateMarketable(Long []ids ,String marketable,String sellerId);
+
+
+	/**
+	 * 批量删除
+	 * @param ids
+	 */
+	public void delete(Long[] ids,String sellerId);
 }

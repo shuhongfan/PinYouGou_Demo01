@@ -15,7 +15,7 @@ public class Test {
 //        5.创建StorageClient
         StorageClient storageClient = new StorageClient(trackerServer,storageServer);
 
-        String[] strings = storageClient.upload_file("C:\\Users\\SHF\\Desktop\\SHF.png", "png", null);
+        String[] strings = storageClient.upload_file("C:\\Users\\shuho\\Desktop\\SHF.png", "png", null);
 
         for (String string : strings) {
             System.out.println(string);

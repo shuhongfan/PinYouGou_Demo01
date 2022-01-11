@@ -14,4 +14,10 @@ public interface ItemSearchService {
      * 导入数据
      */
     public void importList(List list);
+
+    /**
+     * 根据商品iD集合删除索引数据
+     * @param goodsIds
+     */
+    public void deleteByGoodsIds(Long[] goodsIds);
 }

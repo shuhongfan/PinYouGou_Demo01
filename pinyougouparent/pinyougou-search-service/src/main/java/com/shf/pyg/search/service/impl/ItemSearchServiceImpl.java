@@ -237,9 +237,24 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         return map;
     }
 
+    /**
+     * 导入数据
+     */
     @Override
     public void importList(List list) {
         solrTemplate.saveBeans(list);
         solrTemplate.commit();
+    }
+
+    /**
+     * 删除
+     * @param goodsIds
+     */
+    @Override
+    public void deleteByGoodsIds(Long[] goodsIds) {
+        SimpleQuery query = new SimpleQuery();
+        Criteria criteria = new Criteria("item_goodsid").in(goodsIds);
+        query.addCriteria(criteria);
+        solrTemplate.delete(query);
     }
 }

@@ -264,4 +264,18 @@ app.controller('goodsController' ,function($scope,$controller,$location   ,
 			return false
 		}
 	}
+
+	/**
+	 * 上下架
+	 * @param marketabel
+	 */
+	$scope.updateMarketabel=function (marketabel) {
+		goodsService.updateMarketabel( $scope.selectIds , marketabel).success(function (response) {
+			alert(response.message)	;
+			if(response.success){
+				$scope.reloadList();
+				$scope.selectIds=[];
+			}
+		})
+	}
 });	

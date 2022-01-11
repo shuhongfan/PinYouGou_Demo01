@@ -122,4 +122,15 @@ public class GoodsController {
 			return new Result(false, "失败");
 		}
 	}
+
+	@RequestMapping("/updateMarketable")
+	public Result updateMarketable(Long[] ids, String marketable){
+		try {
+			goodsService.updateMarketable(ids,marketable,null);
+			return new Result(true,"上架成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Result(false,"上架失败");
+		}
+	}
 }

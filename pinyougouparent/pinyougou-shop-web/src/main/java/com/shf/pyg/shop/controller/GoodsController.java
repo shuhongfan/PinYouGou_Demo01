@@ -3,6 +3,7 @@ package com.shf.pyg.shop.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.shf.pyg.entity.PageResult;
 import com.shf.pyg.entity.Result;
+import com.shf.pyg.page.service.ItemPageService;
 import com.shf.pyg.pojo.TbGoods;
 import com.shf.pyg.pojo.TbItem;
 import com.shf.pyg.pojogroup.Goods;
@@ -28,7 +29,10 @@ public class GoodsController {
 
 	@Reference
 	private ItemSearchService itemSearchService;
-	
+
+	@Reference
+	private ItemPageService itemPageService;
+
 	/**
 	 * 返回全部列表
 	 * @return
@@ -107,8 +111,10 @@ public class GoodsController {
 	 */
 	@RequestMapping("/delete")
 	public Result delete(Long [] ids){
+		// 获取商家 ID
+		String sellerId = SecurityContextHolder.getContext().getAuthentication().getName();
 		try {
-			goodsService.delete(ids);
+			goodsService.delete(ids,sellerId);
 			return new Result(true, "删除成功"); 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -137,15 +143,35 @@ public class GoodsController {
 	public Result updateMarketable(Long[] ids,String markettable){
 		try {
 			String sellerId = SecurityContextHolder.getContext().getAuthentication().getName();
-//			goodsService.updateMarketable(ids,markettable,sellerId);
+			goodsService.updateMarketable(ids,markettable,sellerId);
+//			上架
 			if (markettable.equals("1")){
+//				查询上架的SKU列表
 				List<TbItem> itemList = goodsService.findItemListByGoodsIds(ids);
-				itemSearchService.importList(itemList);
+				if(itemList.size()>0){
+					//				导入
+					itemSearchService.importList(itemList);
+					for (Long id : ids) {
+						itemPageService.genItemHtml(id);
+					}
+				}
+			}  else {
+//				下架 删除索引数据
+				itemSearchService.deleteByGoodsIds(ids);
 			}
-			return new Result(true,"操作成功");
+			return new Result(true,"上架成功");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new Result(false,"操作失败");
+			return new Result(false,"上架失败");
 		}
+	}
+
+	/**
+	 * 生成静态页
+	 * @param goodsId
+	 */
+	@RequestMapping("/genHtml")
+	public void genHtml(Long goodsId){
+		itemPageService.genItemHtml(goodsId);
 	}
 }
