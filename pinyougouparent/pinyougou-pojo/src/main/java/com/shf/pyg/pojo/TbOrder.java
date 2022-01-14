@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class TbOrder implements Serializable {
+public class TbOrder implements Serializable{
     private Long orderId;
 
     private BigDecimal payment;
@@ -54,6 +54,8 @@ public class TbOrder implements Serializable {
     private String sourceType;
 
     private String sellerId;
+
+    private String outTradeNo;
 
     public Long getOrderId() {
         return orderId;
@@ -253,5 +255,13 @@ public class TbOrder implements Serializable {
 
     public void setSellerId(String sellerId) {
         this.sellerId = sellerId == null ? null : sellerId.trim();
+    }
+
+    public String getOutTradeNo() {
+        return outTradeNo;
+    }
+
+    public void setOutTradeNo(String outTradeNo) {
+        this.outTradeNo = outTradeNo == null ? null : outTradeNo.trim();
     }
 }
