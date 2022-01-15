@@ -219,11 +219,21 @@ public class OrderServiceImpl implements OrderService {
 		return new PageResult(page.getTotal(), page.getResult());
 	}
 
+	/**
+	 * 从 redis中提取支付日志
+	 * @param userId
+	 * @return
+	 */
 	@Override
 	public TbPayLog searchPayLogFromRedis(String userId) {
 		return  (TbPayLog) redisTemplate.boundHashOps("payLog").get(userId);
 	}
 
+	/**
+	 * 更改订单状态为已支付
+	 * @param out_trade_no 支付订单号
+	 * @param transactionId 交易流水号
+	 */
 	@Override
 	public void updateOrderStatus(String out_trade_no, String transactionId) {
 		//1.修改payLog 的状态为1

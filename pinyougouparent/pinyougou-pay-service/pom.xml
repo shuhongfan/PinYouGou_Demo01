@@ -10,13 +10,15 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>war</packaging>
 
-    <artifactId>pinyougou-cart-web</artifactId>
+    <artifactId>pinyougou-pay-service</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
+
     <dependencies>
+
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -86,64 +88,20 @@
         </dependency>
         <dependency>
             <groupId>com.shf.pyg</groupId>
+            <artifactId>pinyougou-pay-interface</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.shf.pyg</groupId>
             <artifactId>pinyougou-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.shf.pyg</groupId>
-            <artifactId>pinyougou-cart-interface</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>com.github.wxpay</groupId>
+            <artifactId>wxpay-sdk</artifactId>
+            <version>0.0.3</version>
         </dependency>
-        <dependency>
-            <groupId>com.shf.pyg</groupId>
-            <artifactId>pinyougou-user-interface</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-            <version>4.1.0.RELEASE</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-            <version>4.1.0.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>4.1.0.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-cas</artifactId>
-            <version>4.1.0.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jasig.cas.client</groupId>
-            <artifactId>cas-client-core</artifactId>
-            <version>3.3.3</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>log4j-over-slf4j</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.shf.pyg</groupId>
-            <artifactId>pinyougou-order-interface</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.shf.pyg</groupId>
-            <artifactId>pinyougou-pay-interface</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
     </dependencies>
-
 
     <build>
         <plugins>
@@ -153,7 +111,7 @@
                 <version>2.2</version>
                 <configuration>
                     <!-- 指定端口 -->
-                    <port>9106</port>
+                    <port>9008</port>
                     <!-- 请求路径 -->
                     <path>/</path>
                 </configuration>

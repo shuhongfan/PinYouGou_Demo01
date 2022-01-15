@@ -55,7 +55,7 @@ public class HttpClient {
 		this.xmlParam = xmlParam;
 	}
 
-	public HttpClient(String url, Map<String, String> param) {
+	public HttpClient() {
 		this.url = url;
 		this.param = param;
 	}
